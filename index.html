@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MY COLLECTION</title>
+<link rel="manifest" href="data:application/manifest+json,{\"name\":\"MY COLLECTION\",\"short_name\":\"Collection\",\"display\":\"standalone\",\"start_url\":\".\",\"icons\":[{\"src\":\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect fill='%23000' rx='12' width='64' height='64'/%3E%3Ctext x='50%25' y='56%25' text-anchor='middle' font-size='36' fill='%23fff' font-family='system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif'%3EMC%3C/text%3E%3C/svg%3E\",\"sizes\":\"64x64\",\"type\":\"image/svg+xml\"}]}" />
+<style>
+  :root{
+    --bg:#0b0c10; --card:#12141a; --muted:#1d2028; --accent:#49c5b6; --text:#e8eaed; --sub:#aab0b9; --ring:#6cf7e9;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0; font: 15px/1.45 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; color:var(--text); background:linear-gradient(180deg,#0b0c10,#0b0c10 60%,#0e1116)}
+  .container{max-width:1100px; margin:0 auto; padding:20px}
+  header{position:sticky; top:0; background:rgba(11,12,16,.7); backdrop-filter:saturate(140%) blur(6px); border-bottom:1px solid #1b1f27; z-index:5}
+  h1{margin:0; letter-spacing:.08em; font-weight:800}
+  .title{display:flex; gap:14px; align-items:center; padding:14px 0}
+  .badge{padding:2px 8px; font-size:12px; border:1px solid #2b2f3a; color:#b7bec9; border-radius:999px}
+  .row{display:grid; grid-template-columns: 1.2fr .8fr; gap:16px}
+  .card{background:var(--card); border:1px solid #1b1f27; border-radius:14px; padding:16px; box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  label{display:block; color:var(--sub); font-size:13px; margin:10px 0 6px}
+  input, select, textarea{width:100%; background:#0f1117; color:var(--text); border:1px solid #2b2f3a; border-radius:10px; padding:10px 12px; outline:none}
+  input:focus, select:focus, textarea:focus{border-color:var(--ring); box-shadow:0 0 0 3px rgba(76, 231, 215, .15)}
+  .grid{display:grid; grid-template-columns: repeat(2,1fr); gap:10px}
+  .actions{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
+  button{appearance:none; border:none; padding:10px 12px; border-radius:12px; cursor:pointer; font-weight:600}
+  .btn{background:var(--accent); color:#052522}
+  .btn.secondary{background:#242833; color:#e6ebf3}
+  .btn.ghost{background:transparent; border:1px solid #2b2f3a; color:#cbd5e1}
+  .hint{font-size:12px; color:#98a2b3}
+  .table{width:100%; border-collapse:separate; border-spacing:0 8px}
+  .table th{font-size:12px; color:#9aa3af; text-align:left; padding:0 10px}
+  .table td{background:var(--muted); padding:10px; border-top:1px solid #2a2f39; border-bottom:1px solid #2a2f39}
+  .table tr td:first-child{border-left:1px solid #2a2f39; border-top-left-radius:10px; border-bottom-left-radius:10px}
+  .table tr td:last-child{border-right:1px solid #2a2f39; border-top-right-radius:10px; border-bottom-right-radius:10px}
+  .pill{font-size:11px; padding:4px 8px; border:1px solid #303643; border-radius:999px; color:#c6d0da}
+  .flex{display:flex; align-items:center; gap:10px}
+  .cat{display:flex; align-items:center; justify-content:space-between; padding:10px 12px; background:var(--muted); border:1px solid #2b2f3a; border-radius:12px}
+  .cat h3{margin:0; font-size:16px}
+  .tot{font-size:12px; color:#cbd5e1}
+  .collapse{margin-top:10px}
+  .collapse[open] summary{border-bottom:1px dashed #2b2f3a; padding-bottom:8px; margin-bottom:8px}
+  summary{cursor:pointer}
+  .photo{width:42px; height:42px; border-radius:8px; object-fit:cover; border:1px solid #2a2f39}
+  footer{margin:30px 0 10px; color:#9aa3af; font-size:12px; text-align:center}
+  .owner{display:flex; gap:10px; align-items:center}
+  .owner input{max-width:260px}
+  .danger{color:#fca5a5}
+  @media(max-width:900px){ .row{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="title">
+        <h1>MY COLLECTION</h1>
+        <span class="badge">offline • dati locali</span>
+      </div>
+      <div class="owner">
+        <label for="ownerInput" class="hint">Proprietario</label>
+        <input id="ownerInput" placeholder="Il tuo nome" />
+        <button class="btn secondary" id="clearAllBtn" title="Cancella tutti i dati">Pulisci dati</button>
+        <small class="hint">I dati restano sul tuo browser (localStorage). Fai un backup periodico.</small>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="row">
+      <!-- FORM INSERIMENTO -->
+      <section class="card">
+        <h2 style="margin:0 0 8px">Aggiungi articolo</h2>
+        <form id="itemForm">
+          <div class="grid">
+            <div>
+              <label>Categoria</label>
+              <input list="catList" id="catInput" placeholder="es. Carte Pokémon" required />
+              <datalist id="catList"></datalist>
+            </div>
+            <div>
+              <label>Sottocategoria</label>
+              <input list="subList" id="subInput" placeholder="es. Set Base 1999" />
+              <datalist id="subList"></datalist>
+            </div>
+            <div>
+              <label>Nome</label>
+              <input id="nameInput" placeholder="Nome / Modello" required />
+            </div>
+            <div>
+              <label>Luogo di acquisto</label>
+              <input id="placeInput" placeholder="es. eBay, Fiera, Negozio" />
+            </div>
+            <div>
+              <label>Data di acquisto</label>
+              <input id="dateInput" type="date" />
+            </div>
+            <div>
+              <label>Prezzo di acquisto (€)</label>
+              <input id="priceInput" inputmode="decimal" placeholder="es. 129,90" />
+            </div>
+            <div>
+              <label>Valore stimato (€)</label>
+              <input id="estInput" inputmode="decimal" placeholder="es. 180" />
+            </div>
+            <div>
+              <label>Foto (opzionale)</label>
+              <input id="photoInput" type="file" accept="image/*" />
+            </div>
+          </div>
+          <label>Descrizione</label>
+          <textarea id="descInput" rows="3" placeholder="Dettagli, stato, note"></textarea>
+          <div class="actions">
+            <button class="btn" type="submit">Aggiungi</button>
+            <button class="btn ghost" type="reset">Reset campi</button>
+          </div>
+          <small class="hint">Suggerimenti di categoria/sottocategoria si aggiornano automaticamente in base a ciò che inserisci.</small>
+          <small class="hint"><span class="danger">Nota foto:</span> immagini salvate come DataURL in locale; tienile piccole per non superare i limiti del browser.</small>
+        </form>
+      </section>
+
+      <!-- ESPORTA & BACKUP -->
+      <aside class="card">
+        <h2 style="margin:0 0 8px">Esporta / Backup</h2>
+        <div class="actions">
+          <button class="btn secondary" id="exportTxt">Esporta TXT</button>
+          <button class="btn secondary" id="exportCsv">Esporta Excel (CSV)</button>
+          <button class="btn secondary" id="exportPdf">Esporta PDF</button>
+        </div>
+        <div class="actions" style="margin-top:14px">
+          <button class="btn" id="exportJson">Backup JSON</button>
+          <label for="importJson" class="btn ghost" style="cursor:pointer">Importa JSON
+            <input id="importJson" type="file" accept="application/json" style="display:none" />
+          </label>
+        </div>
+        <p class="hint">Il PDF viene creato tramite la finestra di stampa ("Salva come PDF").</p>
+      </aside>
+    </div>
+
+    <!-- LISTA RAGGRUPPATA PER CATEGORIA -->
+    <section class="card" style="margin-top:16px">
+      <div class="flex" style="justify-content:space-between">
+        <h2 style="margin:0">Inventario</h2>
+        <div class="flex">
+          <span class="pill" id="totalCount">0 articoli</span>
+          <span class="pill" id="grandBuy">Totale acquisti: € 0,00</span>
+          <span class="pill" id="grandEst">Totale valore stimato: € 0,00</span>
+        </div>
+      </div>
+      <div id="catWrapper" style="margin-top:12px"></div>
+    </section>
+  </main>
+
+  <footer>
+    Creato con ❤ — funziona offline, dati nel tuo browser.
+  </footer>
+
+<script>
+// ===== Utility =====
+const fmt = new Intl.NumberFormat('it-IT', {style:'currency', currency:'EUR'});
+const q = sel => document.querySelector(sel);
+const el = (tag, props={}, ...children)=>{ const n=document.createElement(tag); Object.assign(n, props); children.forEach(c=> n.append(c)); return n };
+const parseNum = (v)=>{ if(!v) return 0; return parseFloat((''+v).replace(/\./g,'').replace(',', '.')) || 0 };
+const uid = ()=>Math.random().toString(36).slice(2,9);
+
+// ===== Storage =====
+const KEY = 'mc_collection_data_v1';
+function load(){
+  try{ return JSON.parse(localStorage.getItem(KEY)) || { owner:'', cats:[], subs:{}, items:[] } }catch{ return { owner:'', cats:[], subs:{}, items:[] } }
+}
+function save(state){ localStorage.setItem(KEY, JSON.stringify(state)) }
+let state = load();
+
+// ===== DOM refs =====
+const ownerInput = q('#ownerInput');
+const catInput = q('#catInput');
+const subInput = q('#subInput');
+const nameInput = q('#nameInput');
+const placeInput = q('#placeInput');
+const dateInput = q('#dateInput');
+const priceInput = q('#priceInput');
+const estInput = q('#estInput');
+const photoInput = q('#photoInput');
+const descInput = q('#descInput');
+const catList = q('#catList');
+const subList = q('#subList');
+const catWrapper = q('#catWrapper');
+const totalCount = q('#totalCount');
+const grandBuy = q('#grandBuy');
+const grandEst = q('#grandEst');
+
+// ===== Init =====
+function hydrate(){
+  ownerInput.value = state.owner || '';
+  renderCatDatalist();
+  render();
+}
+
+function renderCatDatalist(){
+  catList.innerHTML = '';
+  [...new Set(state.cats.concat(state.items.map(i=>i.category).filter(Boolean)))].sort().forEach(c=>{
+    catList.append(el('option',{value:c}))
+  });
+}
+function renderSubDatalist(cat){
+  subList.innerHTML = '';
+  const subs = (state.subs[cat]||[]).concat(state.items.filter(i=>i.category===cat).map(i=>i.subcategory||'')).filter(Boolean);
+  [...new Set(subs)].sort().forEach(s=> subList.append(el('option',{value:s})));
+}
+catInput.addEventListener('input', e=> renderSubDatalist(e.target.value));
+
+ownerInput.addEventListener('input', ()=>{ state.owner = ownerInput.value.trim(); save(state) });
+
+q('#itemForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const item = {
+    id: uid(),
+    category: catInput.value.trim(),
+    subcategory: subInput.value.trim(),
+    name: nameInput.value.trim(),
+    description: descInput.value.trim(),
+    date: dateInput.value || '',
+    place: placeInput.value.trim(),
+    price: parseNum(priceInput.value),
+    estimate: parseNum(estInput.value),
+    photo: null
+  };
+  if(!item.category || !item.name){ alert('Categoria e Nome sono obbligatori.'); return }
+
+  const file = photoInput.files[0];
+  if(file){
+    item.photo = await fileToDataURL(file);
+  }
+
+  // aggiorna liste categorie/sottocategorie
+  if(item.category && !state.cats.includes(item.category)) state.cats.push(item.category);
+  if(item.category){
+    state.subs[item.category] = state.subs[item.category] || [];
+    if(item.subcategory && !state.subs[item.category].includes(item.subcategory)) state.subs[item.category].push(item.subcategory);
+  }
+
+  state.items.push(item);
+  save(state);
+  (e.target).reset();
+  renderCatDatalist();
+  renderSubDatalist(catInput.value);
+  render();
+});
+
+q('#clearAllBtn').addEventListener('click', ()=>{
+  if(confirm('Sicuro di voler eliminare TUTTI i dati?')){
+    state = { owner:'', cats:[], subs:{}, items:[] };
+    save(state);
+    hydrate();
+  }
+});
+
+// ===== Helpers =====
+function fileToDataURL(file){
+  return new Promise((res,rej)=>{
+    const r = new FileReader();
+    r.onload = ()=> res(r.result);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  })
+}
+function download(filename, content, type='text/plain'){
+  const blob = new Blob([content], {type});
+  const url = URL.createObjectURL(blob);
+  const a = el('a', {href:url, download:filename});
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+
+// ===== Render lista per categoria con totali =====
+function groupByCategory(items){
+  const map = new Map();
+  items.forEach(i=>{
+    const key = i.category || 'Senza categoria';
+    if(!map.has(key)) map.set(key, []);
+    map.get(key).push(i);
+  });
+  return map;
+}
+
+function render(){
+  const items = state.items;
+  totalCount.textContent = `${items.length} articoli`;
+  const grandB = items.reduce((a,b)=>a+(b.price||0),0);
+  const grandE = items.reduce((a,b)=>a+(b.estimate||0),0);
+  grandBuy.textContent = `Totale acquisti: ${fmt.format(grandB)}`;
+  grandEst.textContent = `Totale valore stimato: ${fmt.format(grandE)}`;
+
+  const groups = groupByCategory(items);
+  catWrapper.innerHTML='';
+  const catsAll = new Set([...state.cats, ...groups.keys()]);
+  [...catsAll].sort().forEach(cat=>{
+    const list = groups.get(cat)||[];
+    const sumBuy = list.reduce((a,b)=>a+(b.price||0),0);
+    const sumEst = list.reduce((a,b)=>a+(b.estimate||0),0);
+
+    const section = el('section',{});
+    const head = el('div',{className:'cat'},
+      el('h3', {textContent:cat||'Senza categoria'}),
+      el('div', {className:'tot'}, `${list.length} articoli • Somma acquisti: ${fmt.format(sumBuy)} • Somma valore: ${fmt.format(sumEst)}`)
+    );
+
+    const details = el('details',{className:'collapse'});
+    details.append(el('summary',{textContent:'Mostra elenco'}));
+
+    const table = el('table',{className:'table'});
+    const thead = el('thead',{});
+    thead.append(el('tr',{},
+      el('th',{textContent:'Foto'}),
+      el('th',{textContent:'Nome'}),
+      el('th',{textContent:'Sottocategoria'}),
+      el('th',{textContent:'Acquistato il'}),
+      el('th',{textContent:'Luogo'}),
+      el('th',{textContent:'Prezzo'}),
+      el('th',{textContent:'Valore stimato'}),
+      el('th',{textContent:'Azioni'})
+    ));
+    table.append(thead);
+    const tbody = el('tbody',{});
+    (list.length?list:[]).forEach(i=>{
+      const tr = el('tr',{});
+      tr.append(
+        el('td',{}, i.photo? el('img',{src:i.photo, className:'photo'}): el('span',{className:'hint', textContent:'—'})),
+        el('td',{}, el('strong',{textContent:i.name}), el('div',{className:'hint', textContent:i.description||''})),
+        el('td',{textContent:i.subcategory||'—'}),
+        el('td',{textContent: i.date? new Date(i.date).toLocaleDateString('it-IT'): '—'}),
+        el('td',{textContent:i.place||'—'}),
+        el('td',{textContent: i.price? fmt.format(i.price): '—'}),
+        el('td',{textContent: i.estimate? fmt.format(i.estimate): '—'}),
+        el('td',{}, (()=>{ const box = el('div',{className:'actions'});
+          const del = el('button',{className:'btn secondary', textContent:'Elimina'}); del.addEventListener('click',()=>delItem(i.id)); box.append(del);
+          const edit = el('button',{className:'btn ghost', textContent:'Modifica'}); edit.addEventListener('click',()=>editItem(i.id)); box.append(edit);
+          return box })())
+      );
+      tbody.append(tr);
+    });
+    table.append(tbody);
+    details.append(table);
+
+    section.append(head, details);
+    catWrapper.append(section);
+  });
+}
+
+function delItem(id){
+  if(!confirm('Eliminare questo articolo?')) return;
+  state.items = state.items.filter(i=>i.id!==id);
+  save(state); render();
+}
+
+function editItem(id){
+  const i = state.items.find(x=>x.id===id); if(!i) return;
+  // Precarica nel form e rimuove l'originale (si reinserirà alla submit)
+  catInput.value = i.category; renderSubDatalist(i.category); subInput.value = i.subcategory||'';
+  nameInput.value = i.name; descInput.value = i.description||''; dateInput.value = i.date||''; placeInput.value = i.place||'';
+  priceInput.value = i.price? i.price.toString().replace('.',',') : '';
+  estInput.value = i.estimate? i.estimate.toString().replace('.',',') : '';
+  window.scrollTo({top:0, behavior:'smooth'});
+  // rimuovi e salva
+  state.items = state.items.filter(x=>x.id!==id);
+  save(state); render();
+}
+
+// ===== Exporters =====
+function groupedData(){
+  const groups = {};
+  state.items.forEach(i=>{
+    const c = i.category||'Senza categoria';
+    groups[c] = groups[c]||{items:[], sumBuy:0, sumEst:0};
+    groups[c].items.push(i);
+    groups[c].sumBuy += i.price||0; groups[c].sumEst += i.estimate||0;
+  });
+  return groups;
+}
+
+q('#exportTxt').addEventListener('click', ()=>{
+  const g = groupedData();
+  let out = `MY COLLECTION\nProprietario: ${state.owner||'-'}\nGenerato: ${new Date().toLocaleString('it-IT')}\n\n`;
+  Object.keys(g).sort().forEach(cat=>{
+    const {items,sumBuy,sumEst} = g[cat];
+    out += `# ${cat} (articoli: ${items.length})\nSomma acquisti: ${fmt.format(sumBuy)} | Somma valore: ${fmt.format(sumEst)}\n`;
+    items.forEach((i,idx)=>{
+      out += `  ${idx+1}. ${i.name} | Sottocat: ${i.subcategory||'-'} | Data: ${i.date? new Date(i.date).toLocaleDateString('it-IT'):'-'} | Luogo: ${i.place||'-'} | Prezzo: ${i.price? fmt.format(i.price):'-'} | Valore: ${i.estimate? fmt.format(i.estimate):'-'}\n     Note: ${i.description||'-'}\n`;
+    });
+    out += '\n';
+  });
+  download(`my-collection_${new Date().toISOString().slice(0,10)}.txt`, out, 'text/plain;charset=utf-8');
+});
+
+q('#exportCsv').addEventListener('click', ()=>{
+  const rows = [['Categoria','Sottocategoria','Nome','Descrizione','Data acquisto','Luogo','Prezzo acquisto EUR','Valore stimato EUR']];
+  state.items.forEach(i=>{
+    rows.push([
+      i.category||'', i.subcategory||'', i.name||'', (i.description||'').replace(/\n/g,' '),
+      i.date? new Date(i.date).toLocaleDateString('it-IT'):'', i.place||'',
+      (i.price||0).toString().replace('.',','), (i.estimate||0).toString().replace('.',',')
+    ]);
+  });
+  const csv = rows.map(r=> r.map(cell=>`"${(''+cell).replace(/"/g,'""')}"`).join(';')).join('\n');
+  download(`my-collection_${new Date().toISOString().slice(0,10)}.csv`, csv, 'text/csv;charset=utf-8');
+});
+
+q('#exportPdf').addEventListener('click', ()=>{
+  const g = groupedData();
+  const html = `<!doctype html><html lang='it'><head><meta charset='utf-8'><title>MY COLLECTION – PDF</title>
+    <style>
+      body{font-family: Arial, sans-serif; margin:30px;}
+      h1{margin:0 0 6px}
+      h2{margin:18px 0 6px}
+      table{width:100%; border-collapse:collapse;}
+      th,td{border:1px solid #999; padding:6px; font-size:12px}
+      th{background:#efefef}
+      .muted{color:#555; font-size:12px}
+    </style>
+  </head><body>
+    <h1>MY COLLECTION</h1>
+    <div class='muted'>Proprietario: ${escapeHtml(state.owner||'-')} • Generato: ${new Date().toLocaleString('it-IT')}</div>
+    ${Object.keys(g).sort().map(cat=>{
+      const {items,sumBuy,sumEst} = g[cat];
+      return `<h2>${escapeHtml(cat)} — ${items.length} articoli</h2>
+        <div class='muted'>Somma acquisti: ${fmt.format(sumBuy)} | Somma valore: ${fmt.format(sumEst)}</div>
+        <table><thead><tr><th>Nome</th><th>Sottocategoria</th><th>Data</th><th>Luogo</th><th>Prezzo</th><th>Valore</th><th>Note</th></tr></thead>
+        <tbody>
+        ${items.map(i=>`<tr>
+          <td>${escapeHtml(i.name||'')}</td>
+          <td>${escapeHtml(i.subcategory||'')}</td>
+          <td>${i.date? new Date(i.date).toLocaleDateString('it-IT'):''}</td>
+          <td>${escapeHtml(i.place||'')}</td>
+          <td>${i.price? fmt.format(i.price):''}</td>
+          <td>${i.estimate? fmt.format(i.estimate):''}</td>
+          <td>${escapeHtml(i.description||'')}</td>
+        </tr>`).join('')}
+        </tbody></table>`
+    }).join('')}
+    <script>window.print()<\/script>
+  </body></html>`;
+  const blob = new Blob([html], {type:'text/html'});
+  const url = URL.createObjectURL(blob);
+  window.open(url, '_blank');
+});
+
+function escapeHtml(s){
+  return (s||'').replace(/[&<>\"']/g, m=> ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;','\'':'&#039;'}[m]));
+}
+
+// ===== Backup JSON =====
+q('#exportJson').addEventListener('click', ()=>{
+  download(`my-collection-backup_${new Date().toISOString().slice(0,10)}.json`, JSON.stringify(state,null,2), 'application/json');
+});
+q('#importJson').addEventListener('change', async (e)=>{
+  const file = e.target.files[0]; if(!file) return;
+  try{
+    const txt = await file.text();
+    const data = JSON.parse(txt);
+    if(!data || !Array.isArray(data.items)) throw new Error('Formato non valido');
+    state = data; save(state); hydrate();
+  }catch(err){ alert('Import fallito: '+err.message) }
+  e.target.value = '';
+});
+
+// Start
+hydrate();
+</script>
+</body>
+</html>
