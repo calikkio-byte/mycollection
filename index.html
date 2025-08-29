@@ -166,8 +166,8 @@ const uid = ()=>Math.random().toString(36).slice(2,9);
 // ===== Storage =====
 const KEY = 'mc_collection_data_v1';
 function load(){
-  console.log(localStorage());
-  try{ return JSON.parse(localStorage.getItem(KEY)) || { owner:'', cats:[], subs:{}, items:[] } }catch{ return { owner:'', cats:[], subs:{}, items:[] } }
+  
+  try{ console.log(localStorage()); return JSON.parse(localStorage.getItem(KEY)) || { owner:'', cats:[], subs:{}, items:[] } }catch{ return { owner:'', cats:[], subs:{}, items:[] } }
 }
 function save(state){ localStorage.setItem(KEY, JSON.stringify(state)) }
 let state = load();
