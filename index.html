@@ -2,38 +2,39 @@
 <html lang="it">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<title>MY COLLECTION — Mobile (volatile, resized photos)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MY COLLECTION</title>
+<link rel="manifest" href="data:application/manifest+json,{\"name\":\"MY COLLECTION\",\"short_name\":\"Collection\",\"display\":\"standalone\",\"start_url\":\".\",\"icons\":[{\"src\":\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect fill='%23000' rx='12' width='64' height='64'/%3E%3Ctext x='50%25' y='56%25' text-anchor='middle' font-size='36' fill='%23fff' font-family='system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif'%3EMC%3C/text%3E%3C/svg%3E\",\"sizes\":\"64x64\",\"type\":\"image/svg+xml\"}]}" />
 <style>
-  :root{ --bg:#0b0c10; --card:#12141a; --muted:#1d2028; --accent:#49c5b6; --text:#e8eaed; --sub:#aab0b9; --ring:#6cf7e9 }
+  :root{
+    --bg:#0b0c10; --card:#12141a; --muted:#1d2028; --accent:#49c5b6; --text:#e8eaed; --sub:#aab0b9; --ring:#6cf7e9;
+  }
   *{box-sizing:border-box}
   html,body{height:100%}
-  body{margin:0; font: 16px/1.45 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; color:var(--text); background:#0b0c10}
-  .container{max-width:1100px; margin:0 auto; padding:16px}
-  header{position:sticky; top:0; background:rgba(11,12,16,.85); backdrop-filter:saturate(140%) blur(8px); border-bottom:1px solid #1b1f27; z-index:20}
-  h1{margin:0; letter-spacing:.08em; font-weight:800; font-size:clamp(18px,4vw,28px)}
-  .title{display:flex; gap:10px; align-items:center; padding:12px 0}
+  body{margin:0; font: 15px/1.45 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; color:var(--text); background:linear-gradient(180deg,#0b0c10,#0b0c10 60%,#0e1116)}
+  .container{max-width:1100px; margin:0 auto; padding:20px}
+  header{position:sticky; top:0; background:rgba(11,12,16,.7); backdrop-filter:saturate(140%) blur(6px); border-bottom:1px solid #1b1f27; z-index:5}
+  h1{margin:0; letter-spacing:.08em; font-weight:800}
+  .title{display:flex; gap:14px; align-items:center; padding:14px 0}
   .badge{padding:2px 8px; font-size:12px; border:1px solid #2b2f3a; color:#b7bec9; border-radius:999px}
   .row{display:grid; grid-template-columns: 1.2fr .8fr; gap:16px}
-  .card{background:var(--card); border:1px solid #1b1f27; border-radius:14px; padding:14px; box-shadow:0 10px 30px rgba(0,0,0,.25)}
-  label{display:block; color:var(--sub); font-size:14px; margin:10px 0 6px}
-  input, select, textarea{width:100%; background:#0f1117; color:var(--text); border:1px solid #2b2f3a; border-radius:12px; padding:14px 14px; outline:none; font-size:16px}
+  .card{background:var(--card); border:1px solid #1b1f27; border-radius:14px; padding:16px; box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  label{display:block; color:var(--sub); font-size:13px; margin:10px 0 6px}
+  input, select, textarea{width:100%; background:#0f1117; color:var(--text); border:1px solid #2b2f3a; border-radius:10px; padding:10px 12px; outline:none}
   input:focus, select:focus, textarea:focus{border-color:var(--ring); box-shadow:0 0 0 3px rgba(76, 231, 215, .15)}
-  .grid{display:grid; grid-template-columns: 1fr 1fr; gap:10px}
+  .grid{display:grid; grid-template-columns: repeat(2,1fr); gap:10px}
   .actions{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
-  button{appearance:none; border:none; padding:12px 14px; border-radius:14px; cursor:pointer; font-weight:700; font-size:16px}
+  button{appearance:none; border:none; padding:10px 12px; border-radius:12px; cursor:pointer; font-weight:600}
   .btn{background:var(--accent); color:#052522}
   .btn.secondary{background:#242833; color:#e6ebf3}
   .btn.ghost{background:transparent; border:1px solid #2b2f3a; color:#cbd5e1}
   .hint{font-size:12px; color:#98a2b3}
   .table{width:100%; border-collapse:separate; border-spacing:0 8px}
-  .table th{font-size:12px; color:#9aa3af; text-align:left; padding:0 8px}
+  .table th{font-size:12px; color:#9aa3af; text-align:left; padding:0 10px}
   .table td{background:var(--muted); padding:10px; border-top:1px solid #2a2f39; border-bottom:1px solid #2a2f39}
   .table tr td:first-child{border-left:1px solid #2a2f39; border-top-left-radius:10px; border-bottom-left-radius:10px}
   .table tr td:last-child{border-right:1px solid #2a2f39; border-top-right-radius:10px; border-bottom-right-radius:10px}
-  .pill{font-size:12px; padding:6px 10px; border:1px solid #303643; border-radius:999px; color:#c6d0da}
+  .pill{font-size:11px; padding:4px 8px; border:1px solid #303643; border-radius:999px; color:#c6d0da}
   .flex{display:flex; align-items:center; gap:10px}
   .cat{display:flex; align-items:center; justify-content:space-between; padding:10px 12px; background:var(--muted); border:1px solid #2b2f3a; border-radius:12px}
   .cat h3{margin:0; font-size:16px}
@@ -41,15 +42,12 @@
   .collapse{margin-top:10px}
   .collapse[open] summary{border-bottom:1px dashed #2b2f3a; padding-bottom:8px; margin-bottom:8px}
   summary{cursor:pointer}
-  .photo{width:48px; height:48px; border-radius:10px; object-fit:cover; border:1px solid #2a2f39}
-  footer{margin:70px 0 14px; color:#9aa3af; font-size:12px; text-align:center}
+  .photo{width:42px; height:42px; border-radius:8px; object-fit:cover; border:1px solid #2a2f39}
+  footer{margin:30px 0 10px; color:#9aa3af; font-size:12px; text-align:center}
   .owner{display:flex; gap:10px; align-items:center}
   .owner input{max-width:260px}
   .danger{color:#fca5a5}
-  @media(max-width:900px){ .row{grid-template-columns:1fr} .grid{grid-template-columns: 1fr} .owner{flex-wrap:wrap} }
-  .bottom-bar{position:fixed; bottom:0; left:0; right:0; padding:8px 12px calc(8px + env(safe-area-inset-bottom)); background:rgba(18,20,26,.9); backdrop-filter:saturate(140%) blur(8px); border-top:1px solid #1b1f27; display:flex; gap:8px; z-index:30}
-  .bottom-bar button{flex:1}
-  .spacer{height:64px}
+  @media(max-width:900px){ .row{grid-template-columns:1fr} }
 </style>
 </head>
 <body>
@@ -57,31 +55,32 @@
     <div class="container">
       <div class="title">
         <h1>MY COLLECTION</h1>
-        <span class="badge">mobile • volatile</span>
+        <span class="badge">offline • dati locali</span>
       </div>
       <div class="owner">
         <label for="ownerInput" class="hint">Proprietario</label>
         <input id="ownerInput" placeholder="Il tuo nome" />
-        <button class="btn secondary" id="clearAllBtn" title="Cancella dati della sessione">Pulisci dati</button>
+        <button class="btn secondary" id="clearAllBtn" title="Cancella tutti i dati">Pulisci dati</button>
+        <small class="hint">I dati restano sul tuo browser (localStorage). Fai un backup periodico.</small>
       </div>
-      <small class="hint">⚠️ Versione <strong>senza salvataggio persistente</strong>: i dati si perdono al refresh. Usa Backup JSON per salvarli.</small>
     </div>
   </header>
 
   <main class="container">
     <div class="row">
-      <section class="card" id="formCard">
+      <!-- FORM INSERIMENTO -->
+      <section class="card">
         <h2 style="margin:0 0 8px">Aggiungi articolo</h2>
         <form id="itemForm">
           <div class="grid">
             <div>
               <label>Categoria</label>
-              <input list="catList" id="catInput" placeholder="es. Carte Pokémon" required autocomplete="off" />
+              <input list="catList" id="catInput" placeholder="es. Carte Pokémon" required />
               <datalist id="catList"></datalist>
             </div>
             <div>
               <label>Sottocategoria</label>
-              <input list="subList" id="subInput" placeholder="es. Set Base 1999" autocomplete="off" />
+              <input list="subList" id="subInput" placeholder="es. Set Base 1999" />
               <datalist id="subList"></datalist>
             </div>
             <div>
@@ -98,33 +97,35 @@
             </div>
             <div>
               <label>Prezzo di acquisto (€)</label>
-              <input id="priceInput" inputmode="decimal" pattern="[0-9.,]*" placeholder="129,90" />
+              <input id="priceInput" inputmode="decimal" placeholder="es. 129,90" />
             </div>
             <div>
               <label>Valore stimato (€)</label>
-              <input id="estInput" inputmode="decimal" pattern="[0-9.,]*" placeholder="180" />
+              <input id="estInput" inputmode="decimal" placeholder="es. 180" />
             </div>
             <div>
-              <label>Foto (ridimensionata automaticamente)</label>
-              <input id="photoInput" type="file" accept="image/*" capture="environment" />
+              <label>Foto (opzionale)</label>
+              <input id="photoInput" type="file" accept="image/*" />
             </div>
           </div>
           <label>Descrizione</label>
-          <textarea id="descInput" rows="4" placeholder="Dettagli, stato, note"></textarea>
+          <textarea id="descInput" rows="3" placeholder="Dettagli, stato, note"></textarea>
           <div class="actions">
             <button class="btn" type="submit">Aggiungi</button>
             <button class="btn ghost" type="reset">Reset campi</button>
           </div>
-          <small class="hint">Le foto vengono ridotte (max 700px lato lungo, JPEG qualità ~0.8) e tenute solo in memoria.</small>
+          <small class="hint">Suggerimenti di categoria/sottocategoria si aggiornano automaticamente in base a ciò che inserisci.</small>
+          <small class="hint"><span class="danger">Nota foto:</span> immagini salvate come DataURL in locale; tienile piccole per non superare i limiti del browser.</small>
         </form>
       </section>
 
-      <aside class="card" id="exportCard">
+      <!-- ESPORTA & BACKUP -->
+      <aside class="card">
         <h2 style="margin:0 0 8px">Esporta / Backup</h2>
         <div class="actions">
-          <button class="btn secondary" id="exportTxt">TXT</button>
-          <button class="btn secondary" id="exportCsv">Excel (CSV)</button>
-          <button class="btn secondary" id="exportPdf">PDF</button>
+          <button class="btn secondary" id="exportTxt">Esporta TXT</button>
+          <button class="btn secondary" id="exportCsv">Esporta Excel (CSV)</button>
+          <button class="btn secondary" id="exportPdf">Esporta PDF</button>
         </div>
         <div class="actions" style="margin-top:14px">
           <button class="btn" id="exportJson">Backup JSON</button>
@@ -132,13 +133,15 @@
             <input id="importJson" type="file" accept="application/json" style="display:none" />
           </label>
         </div>
+        <p class="hint">Il PDF viene creato tramite la finestra di stampa ("Salva come PDF").</p>
       </aside>
     </div>
 
-    <section class="card" style="margin-top:16px" id="inventoryCard">
-      <div class="flex" style="justify-content:space-between; align-items:flex-start; gap:8px; flex-wrap:wrap">
+    <!-- LISTA RAGGRUPPATA PER CATEGORIA -->
+    <section class="card" style="margin-top:16px">
+      <div class="flex" style="justify-content:space-between">
         <h2 style="margin:0">Inventario</h2>
-        <div class="flex" style="flex-wrap:wrap">
+        <div class="flex">
           <span class="pill" id="totalCount">0 articoli</span>
           <span class="pill" id="grandBuy">Totale acquisti: € 0,00</span>
           <span class="pill" id="grandEst">Totale valore stimato: € 0,00</span>
@@ -148,16 +151,8 @@
     </section>
   </main>
 
-  <div class="spacer"></div>
-  <div class="bottom-bar">
-    <button class="btn" id="goAdd">➕ Aggiungi</button>
-    <button class="btn secondary" id="goExport">⬇️ Esporta</button>
-    <button class="btn ghost" id="goInventory">📦 Inventario</button>
-  </div>
-
   <footer>
-    Creato con ❤ — mobile, sessione volatile (no salvataggio).
-    <br><strong>Realizzato da 2M Digital Consulting SRLS</strong>
+    Creato con ❤ — funziona offline, dati nel tuo browser.
   </footer>
 
 <script>
@@ -168,36 +163,13 @@ const el = (tag, props={}, ...children)=>{ const n=document.createElement(tag); 
 const parseNum = (v)=>{ if(!v) return 0; return parseFloat((''+v).replace(/\./g,'').replace(',', '.')) || 0 };
 const uid = ()=>Math.random().toString(36).slice(2,9);
 
-// ===== Photo resize to small DataURL (in-memory) =====
-async function fileToResizedDataURL(file, maxDim = 700, quality = 0.8){
-  const img = await fileToImage(file);
-  const {w,h} = fitContain(img.naturalWidth, img.naturalHeight, maxDim);
-  const canvas = document.createElement('canvas');
-  canvas.width = w; canvas.height = h;
-  const ctx = canvas.getContext('2d');
-  ctx.drawImage(img, 0, 0, w, h);
-  return canvas.toDataURL('image/jpeg', quality);
+// ===== Storage =====
+const KEY = 'mc_collection_data_v1';
+function load(){
+  try{ return JSON.parse(localStorage.getItem(KEY)) || { owner:'', cats:[], subs:{}, items:[] } }catch{ return { owner:'', cats:[], subs:{}, items:[] } }
 }
-function fileToImage(file){
-  return new Promise((res,rej)=>{
-    const fr = new FileReader();
-    fr.onload = ()=>{ const img = new Image(); img.onload = ()=> res(img); img.onerror = rej; img.src = fr.result }; 
-    fr.onerror = rej; fr.readAsDataURL(file);
-  });
-}
-function fitContain(w, h, max){
-  if(!w || !h) return {w: max, h: max};
-  const ratio = Math.min(max / w, max / h, 1);
-  return {w: Math.round(w * ratio), h: Math.round(h * ratio)};
-}
-
-// ===== Smooth scroll anchors =====
-q('#goAdd').addEventListener('click', ()=> q('#formCard').scrollIntoView({behavior:'smooth', block:'start'}));
-q('#goExport').addEventListener('click', ()=> q('#exportCard').scrollIntoView({behavior:'smooth', block:'start'}));
-q('#goInventory').addEventListener('click', ()=> q('#inventoryCard').scrollIntoView({behavior:'smooth', block:'start'}));
-
-// ===== Volatile state (no persistence) =====
-let state = { owner:'', cats:[], subs:{}, items:[] };
+function save(state){ localStorage.setItem(KEY, JSON.stringify(state)) }
+let state = load();
 
 // ===== DOM refs =====
 const ownerInput = q('#ownerInput');
@@ -218,10 +190,17 @@ const grandBuy = q('#grandBuy');
 const grandEst = q('#grandEst');
 
 // ===== Init =====
-function hydrate(){ ownerInput.value = state.owner || ''; renderCatDatalist(); render(); }
+function hydrate(){
+  ownerInput.value = state.owner || '';
+  renderCatDatalist();
+  render();
+}
+
 function renderCatDatalist(){
   catList.innerHTML = '';
-  [...new Set(state.cats.concat(state.items.map(i=>i.category).filter(Boolean)))].sort().forEach(c=>{ catList.append(el('option',{value:c})) });
+  [...new Set(state.cats.concat(state.items.map(i=>i.category).filter(Boolean)))].sort().forEach(c=>{
+    catList.append(el('option',{value:c}))
+  });
 }
 function renderSubDatalist(cat){
   subList.innerHTML = '';
@@ -229,7 +208,8 @@ function renderSubDatalist(cat){
   [...new Set(subs)].sort().forEach(s=> subList.append(el('option',{value:s})));
 }
 catInput.addEventListener('input', e=> renderSubDatalist(e.target.value));
-ownerInput.addEventListener('input', ()=>{ state.owner = ownerInput.value.trim(); });
+
+ownerInput.addEventListener('input', ()=>{ state.owner = ownerInput.value.trim(); save(state) });
 
 q('#itemForm').addEventListener('submit', async (e)=>{
   e.preventDefault();
@@ -249,9 +229,10 @@ q('#itemForm').addEventListener('submit', async (e)=>{
 
   const file = photoInput.files[0];
   if(file){
-    try{ item.photo = await fileToResizedDataURL(file, 700, 0.8); }catch(err){ console.warn(err); item.photo = null; }
+    item.photo = await fileToDataURL(file);
   }
 
+  // aggiorna liste categorie/sottocategorie
   if(item.category && !state.cats.includes(item.category)) state.cats.push(item.category);
   if(item.category){
     state.subs[item.category] = state.subs[item.category] || [];
@@ -259,18 +240,39 @@ q('#itemForm').addEventListener('submit', async (e)=>{
   }
 
   state.items.push(item);
+  save(state);
   (e.target).reset();
-  renderCatDatalist(); renderSubDatalist(catInput.value); render();
-  window.navigator.vibrate?.(10);
+  renderCatDatalist();
+  renderSubDatalist(catInput.value);
+  render();
 });
 
 q('#clearAllBtn').addEventListener('click', ()=>{
-  if(!confirm('Sicuro di voler eliminare TUTTI i dati della sessione?')) return;
-  state = { owner:'', cats:[], subs:{}, items:[] };
-  hydrate();
+  if(confirm('Sicuro di voler eliminare TUTTI i dati?')){
+    state = { owner:'', cats:[], subs:{}, items:[] };
+    save(state);
+    hydrate();
+  }
 });
 
-// ===== Render =====
+// ===== Helpers =====
+function fileToDataURL(file){
+  return new Promise((res,rej)=>{
+    const r = new FileReader();
+    r.onload = ()=> res(r.result);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  })
+}
+function download(filename, content, type='text/plain'){
+  const blob = new Blob([content], {type});
+  const url = URL.createObjectURL(blob);
+  const a = el('a', {href:url, download:filename});
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+
+// ===== Render lista per categoria con totali =====
 function groupByCategory(items){
   const map = new Map();
   items.forEach(i=>{
@@ -348,21 +350,23 @@ function render(){
 function delItem(id){
   if(!confirm('Eliminare questo articolo?')) return;
   state.items = state.items.filter(i=>i.id!==id);
-  render();
+  save(state); render();
 }
 
 function editItem(id){
   const i = state.items.find(x=>x.id===id); if(!i) return;
+  // Precarica nel form e rimuove l'originale (si reinserirà alla submit)
   catInput.value = i.category; renderSubDatalist(i.category); subInput.value = i.subcategory||'';
   nameInput.value = i.name; descInput.value = i.description||''; dateInput.value = i.date||''; placeInput.value = i.place||'';
   priceInput.value = i.price? i.price.toString().replace('.',',') : '';
   estInput.value = i.estimate? i.estimate.toString().replace('.',',') : '';
   window.scrollTo({top:0, behavior:'smooth'});
+  // rimuovi e salva
   state.items = state.items.filter(x=>x.id!==id);
-  render();
+  save(state); render();
 }
 
-// ===== Exporters (dalla memoria) =====
+// ===== Exporters =====
 function groupedData(){
   const groups = {};
   state.items.forEach(i=>{
@@ -374,33 +378,16 @@ function groupedData(){
   return groups;
 }
 
-function download(filename, content, type='text/plain'){
-  const blob = new Blob([content], {type});
-  const url = URL.createObjectURL(blob);
-  const a = el('a', {href:url, download:filename});
-  document.body.appendChild(a); a.click(); a.remove();
-  URL.revokeObjectURL(url);
-}
-
 q('#exportTxt').addEventListener('click', ()=>{
   const g = groupedData();
-  let out = `MY COLLECTION
-Proprietario: ${state.owner||'-'}
-Generato: ${new Date().toLocaleString('it-IT')}
-
-`;
+  let out = `MY COLLECTION\nProprietario: ${state.owner||'-'}\nGenerato: ${new Date().toLocaleString('it-IT')}\n\n`;
   Object.keys(g).sort().forEach(cat=>{
     const {items,sumBuy,sumEst} = g[cat];
-    out += `# ${cat} (articoli: ${items.length})
-Somma acquisti: ${fmt.format(sumBuy)} | Somma valore: ${fmt.format(sumEst)}
-`;
+    out += `# ${cat} (articoli: ${items.length})\nSomma acquisti: ${fmt.format(sumBuy)} | Somma valore: ${fmt.format(sumEst)}\n`;
     items.forEach((i,idx)=>{
-      out += `  ${idx+1}. ${i.name} | Sottocat: ${i.subcategory||'-'} | Data: ${i.date? new Date(i.date).toLocaleDateString('it-IT'):'-'} | Luogo: ${i.place||'-'} | Prezzo: ${i.price? fmt.format(i.price):'-'} | Valore: ${i.estimate? fmt.format(i.estimate):'-'}
-     Note: ${i.description||'-'}
-`;
+      out += `  ${idx+1}. ${i.name} | Sottocat: ${i.subcategory||'-'} | Data: ${i.date? new Date(i.date).toLocaleDateString('it-IT'):'-'} | Luogo: ${i.place||'-'} | Prezzo: ${i.price? fmt.format(i.price):'-'} | Valore: ${i.estimate? fmt.format(i.estimate):'-'}\n     Note: ${i.description||'-'}\n`;
     });
-    out += '
-';
+    out += '\n';
   });
   download(`my-collection_${new Date().toISOString().slice(0,10)}.txt`, out, 'text/plain;charset=utf-8');
 });
@@ -409,14 +396,12 @@ q('#exportCsv').addEventListener('click', ()=>{
   const rows = [['Categoria','Sottocategoria','Nome','Descrizione','Data acquisto','Luogo','Prezzo acquisto EUR','Valore stimato EUR']];
   state.items.forEach(i=>{
     rows.push([
-      i.category||'', i.subcategory||'', i.name||'', (i.description||'').replace(/
-/g,' '),
+      i.category||'', i.subcategory||'', i.name||'', (i.description||'').replace(/\n/g,' '),
       i.date? new Date(i.date).toLocaleDateString('it-IT'):'', i.place||'',
       (i.price||0).toString().replace('.',','), (i.estimate||0).toString().replace('.',',')
     ]);
   });
-  const csv = rows.map(r=> r.map(cell=>`"${(''+cell).replace(/"/g,'""')}"`).join(';')).join('
-');
+  const csv = rows.map(r=> r.map(cell=>`"${(''+cell).replace(/"/g,'""')}"`).join(';')).join('\n');
   download(`my-collection_${new Date().toISOString().slice(0,10)}.csv`, csv, 'text/csv;charset=utf-8');
 });
 
@@ -424,9 +409,9 @@ q('#exportPdf').addEventListener('click', ()=>{
   const g = groupedData();
   const html = `<!doctype html><html lang='it'><head><meta charset='utf-8'><title>MY COLLECTION – PDF</title>
     <style>
-      body{font-family: Arial, sans-serif; margin:20px;}
+      body{font-family: Arial, sans-serif; margin:30px;}
       h1{margin:0 0 6px}
-      h2{margin:18px 0 6px; page-break-after:avoid}
+      h2{margin:18px 0 6px}
       table{width:100%; border-collapse:collapse;}
       th,td{border:1px solid #999; padding:6px; font-size:12px}
       th{background:#efefef}
@@ -459,12 +444,13 @@ q('#exportPdf').addEventListener('click', ()=>{
   window.open(url, '_blank');
 });
 
-function escapeHtml(s){ return (s||'').replace(/[&<>\"']/g, m=> ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;','\'':'&#039;'}[m])); }
+function escapeHtml(s){
+  return (s||'').replace(/[&<>\"']/g, m=> ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;','\'':'&#039;'}[m]));
+}
 
-// ===== Backup JSON (solo dati, no foto esterne) =====
+// ===== Backup JSON =====
 q('#exportJson').addEventListener('click', ()=>{
-  const json = JSON.stringify(state, null, 2);
-  download(`my-collection-session_${new Date().toISOString().slice(0,10)}.json`, json, 'application/json');
+  download(`my-collection-backup_${new Date().toISOString().slice(0,10)}.json`, JSON.stringify(state,null,2), 'application/json');
 });
 q('#importJson').addEventListener('change', async (e)=>{
   const file = e.target.files[0]; if(!file) return;
@@ -472,7 +458,7 @@ q('#importJson').addEventListener('change', async (e)=>{
     const txt = await file.text();
     const data = JSON.parse(txt);
     if(!data || !Array.isArray(data.items)) throw new Error('Formato non valido');
-    state = data; hydrate();
+    state = data; save(state); hydrate();
   }catch(err){ alert('Import fallito: '+err.message) }
   e.target.value = '';
 });
